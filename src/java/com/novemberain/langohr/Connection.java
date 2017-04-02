@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014 Michael S. Klishin
+// Copyright (c) 2011-2016 Michael S. Klishin
 //
 // The use and distribution terms for this software are covered by the
 // Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
@@ -41,7 +41,7 @@ public class Connection implements com.rabbitmq.client.Connection, Recoverable {
   private static final Keyword NETWORK_RECOVERY_DELAY_KEYWORD = Keyword.intern(null, NETWORK_RECOVERY_DELAY_KEYWORD_NAME);
   private static final long DEFAULT_NETWORK_RECOVERY_DELAY = 5000;
   private static final Keyword EXECUTOR_KEYWORD = Keyword.intern(null, "executor");
-  private static final Keyword HOSTS_KEYWORD = Keyword.intern(null, "hosts");
+  private static final Keyword CONNECTION_NAME_KEYWORD = Keyword.intern(null, "connection-name");
   private final IPersistentMap options;
 
   private com.rabbitmq.client.Connection delegate;
@@ -87,10 +87,21 @@ public class Connection implements com.rabbitmq.client.Connection, Recoverable {
   @SuppressWarnings("unused")
   public Connection init(Address[] addresses) throws IOException, TimeoutException {
     ExecutorService es = (ExecutorService) this.options.valAt(EXECUTOR_KEYWORD);
+
+    String cn = (String) this.options.valAt(CONNECTION_NAME_KEYWORD);
+
     if (addresses.length > 0) {
-      this.delegate = cf.newConnection(es, addresses);
+      if(cn != null) {
+        this.delegate = cf.newConnection(es, addresses, cn);
+      } else {
+        this.delegate = cf.newConnection(es, addresses);
+      }
     } else {
-      this.delegate = cf.newConnection(es);
+      if(cn != null) {
+        this.delegate = cf.newConnection(es, cn);
+      } else {
+        this.delegate = cf.newConnection(es);
+      }
     }
 
     return this;
@@ -102,17 +113,6 @@ public class Connection implements com.rabbitmq.client.Connection, Recoverable {
 
   public boolean automaticTopologyRecoveryEnabled() {
     return automaticallyRecoverTopology;
-  }
-
-
-  public void onRecovery(final IFn f) {
-    if (this.automaticRecoveryEnabled()) {
-      ((AutorecoveringConnection) this.delegate).addRecoveryListener(new RecoveryListener() {
-        public void handleRecovery(com.rabbitmq.client.Recoverable recoverable) {
-          f.invoke(recoverable);
-        }
-      });
-    }
   }
 
   /**
@@ -286,6 +286,19 @@ public class Connection implements com.rabbitmq.client.Connection, Recoverable {
   }
 
   /**
+   * Returns client-provided connection name, if any. Note that the value
+   * returned does not uniquely identify a connection and cannot be used
+   * as a connection identifier in HTTP API requests.
+   *
+   * @return client-provided connection name, if any
+   * @see ConnectionFactory#newConnection(Address[], String)
+   * @see ConnectionFactory#newConnection(ExecutorService, Address[], String)
+   */
+  public String getClientProvidedName() {
+    return delegate.getClientProvidedName();
+  }
+
+  /**
    * Close this connection and all its channels.
    * <p/>
    * Waits for all the close operations to complete.
@@ -355,6 +368,14 @@ public class Connection implements com.rabbitmq.client.Connection, Recoverable {
    */
   public int getFrameMax() {
     return delegate.getFrameMax();
+  }
+
+  public void setId(String id) {
+    delegate.setId(id);
+  }
+
+  public String getId() {
+    return delegate.getId();
   }
 
   /**

@@ -41,9 +41,8 @@ definition to your `pom.xml`:
 
 With [Leiningen](http://leiningen.org):
 
-``` clojure
-[com.novemberain/langohr "3.4.1"]
-```
+[![Clojars Project](http://clojars.org/com.novemberain/langohr/latest-version.svg)](http://clojars.org/com.novemberain/langohr)
+
 
 With Maven:
 
@@ -51,7 +50,7 @@ With Maven:
 <dependency>
   <groupId>com.novemberain</groupId>
   <artifactId>langohr</artifactId>
-  <version>3.4.1</version>
+  <version>3.7.0</version>
 </dependency>
 ```
 
@@ -91,7 +90,7 @@ stable release is highly recommended.
 
 ## Supported RabbitMQ Versions
 
-Langohr depends on RabbitMQ Java client 3.4.x and requires
+Langohr depends on RabbitMQ Java client 3.x and requires
 RabbitMQ versions 3.3 and later.
 
 
@@ -134,18 +133,12 @@ Langohr is part of the group of libraries known as [ClojureWerkz](http://clojure
 
 ## Development
 
-Langohr uses [Leiningen 2](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md). Make
-sure you have it installed and then run tests against all supported Clojure versions using
-
-    lein all test
-
-Then create a branch and make your changes on it. Once you are done with your changes and all
-tests pass, submit a pull request on Github.
+See [CONTRIBUTING.md](https://github.com/michaelklishin/langohr/blob/master/CONTRIBUTING.md).
 
 
 ## License
 
-Copyright (C) 2011-2015 Michael S. Klishin and the ClojureWerkz Team.
+Copyright (C) 2011-2017 Michael S. Klishin and the ClojureWerkz Team.
 
 Double licensed under the [Eclipse Public License](http://www.eclipse.org/legal/epl-v10.html) (the same as Clojure) or
 the [Apache Public License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).

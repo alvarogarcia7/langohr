@@ -4,7 +4,7 @@
 ;; The APL v2.0:
 ;;
 ;; ----------------------------------------------------------------------------------
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
+;; Copyright (c) 2011-2016 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
 ;;
 ;; Licensed under the Apache License, Version 2.0 (the "License");
 ;; you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 ;; The EPL v1.0:
 ;;
 ;; ----------------------------------------------------------------------------------
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
+;; Copyright (c) 2011-2016 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
 ;; All rights reserved.
 ;;
 ;; This program and the accompanying materials are made available under the terms of
@@ -60,12 +60,11 @@
   ^String :exchange: name of the exchange to publish to. Can be an empty string, which means default exchange.
   ^String :routing-key: the routing key for the message. Used for routing messages depending on exchange configuration.
 
-  Payload can be anything the langohr.conversion/BytePayload protocol is extended for, Langohr ships with
+  Payload can be anything the clojurewerkz.support.bytes/ByteSource protocol is extended for, Langohr ships with
   an implementation for byte arrays and strings.
 
   Options:
   ^Boolean :mandatory (default false): specifies reaction of server if the message can't be routed to a queue.
-  ^Boolean :immediate (default false): specifies reaction of server if the message can't be delivered to a consumer immediately.
 
 
   Basic properties:
@@ -87,7 +86,7 @@
 
   Example:
 
-      (lhb/publish channel exchange queue payload :priority 8 :message-id msg-id :content-type content-type :headers { \"see you soon\" \"à bientôt\" })"
+      (lhb/publish channel exchange queue payload {:priority 8 :message-id msg-id :content-type content-type :headers { \"key\" \"value\" }})"
   ([^Channel ch ^String exchange ^String routing-key payload]
      (publish ch exchange routing-key payload {}))
   ([^Channel channel ^String exchange ^String routing-key payload

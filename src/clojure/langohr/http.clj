@@ -4,7 +4,7 @@
 ;; The APL v2.0:
 ;;
 ;; ----------------------------------------------------------------------------------
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
+;; Copyright (c) 2011-2016 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
 ;;
 ;; Licensed under the Apache License, Version 2.0 (the "License");
 ;; you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 ;; The EPL v1.0:
 ;;
 ;; ----------------------------------------------------------------------------------
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
+;; Copyright (c) 2011-2016 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
 ;; All rights reserved.
 ;;
 ;; This program and the accompanying materials are made available under the terms of
@@ -65,9 +65,11 @@
 (defn safe-json-decode
   "Try to parse json response. If the content-type is not json, just return the body (string)."
   [{body :body {content-type "content-type"} :headers}]
-  (if (.contains (.toLowerCase ^String content-type) "json")
-    (json/decode body true)
-    body))
+  (if (or (nil? body) (.isEmpty body))
+    nil
+    (if (.contains (.toLowerCase ^String content-type) "json")
+      (json/decode body true)
+      body)))
 
 (defn ^{:private true} post
   ([^String uri]

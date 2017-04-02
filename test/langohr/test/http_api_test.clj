@@ -84,9 +84,9 @@
     (is (:arguments r))))
 
 (deftest ^{:http true} test-get-non-existing-vhost
-  (let [r (hc/list-exchanges "amq.non-existing-vhost")
-        m "Object Not Found"]
-    (is (= (:error r) m))))
+  (let [r (hc/list-exchanges "amq.non-existing-vhost")]
+    (is (or (nil? r)
+            (= (:error r) "Object Not Found")))))
 
 (deftest ^{:http true} test-declare-and-delete-exchange
   (let [s  "langohr.http.fanout"
@@ -116,21 +116,6 @@
         _  (hc/delete-queue "/" s)]
     (is (= true r1))
     (is (= true r2))))
-
-(deftest ^{:http true} test-list-bindings
-  (let [q  "langohr.http.queue"
-        e  "langohr.http.fanout"
-        _ (hc/declare-exchange "/" e {:durable false :auto_delete true :internal false :arguments {}})
-        _ (hc/declare-queue "/" q {:durable false :auto_delete true :arguments {}})
-        r1 (hc/bind "/" e q)
-        xs (hc/list-bindings "/")
-        m  (first xs)]
-    (is r1)
-    (is (coll? xs))
-    (is (:source m))
-    (is (:destination m))
-    (is (:vhost m))
-    (is (= "queue" (:destination_type m)))))
 
 (deftest ^{:http true} test-list-vhosts
   (let [xs (hc/list-vhosts)]

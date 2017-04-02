@@ -4,7 +4,7 @@
 ;; The APL v2.0:
 ;;
 ;; ----------------------------------------------------------------------------------
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
+;; Copyright (c) 2011-2016 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team
 ;;
 ;; Licensed under the Apache License, Version 2.0 (the "License");
 ;; you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 ;; The EPL v1.0:
 ;;
 ;; ----------------------------------------------------------------------------------
-;; Copyright (c) 2011-2015 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
+;; Copyright (c) 2011-2016 Michael S. Klishin, Alex Petrov, and the ClojureWerkz Team.
 ;; All rights reserved.
 ;;
 ;; This program and the accompanying materials are made available under the terms of
@@ -196,10 +196,19 @@
 
 (defn on-recovery
   "Registers a network recovery callback on a (Langohr) connection or channel"
-  [^Recoverable target ^IFn callback]
-  (.addRecoveryListener target (reify RecoveryListener
-                                 (^void handleRecovery [this ^Recoverable it]
-                                   (callback it)))))
+  ([^Recoverable target ^IFn recovery-finished-fn]
+     (.addRecoveryListener target (reify RecoveryListener
+                                    (^void handleRecovery [this ^Recoverable it]
+                                      (recovery-finished-fn it))
+                                    (^void handleRecoveryStarted [this ^Recoverable it]
+                                      ;; intentionally no-op
+                                      (fn [this ^Recoverable it] )))))
+  ([^Recoverable target ^IFn recovery-started-fn ^IFn recovery-finished-fn]
+     (.addRecoveryListener target (reify RecoveryListener
+                                    (^void handleRecoveryStarted [this ^Recoverable it]
+                                      (recovery-started-fn it))
+                                    (^void handleRecovery [this ^Recoverable it]
+                                      (recovery-finished-fn it))))))
 
 (defn ^QueueRecoveryListener queue-recovery-listener
   "Reifies a new queue recovery listener that delegates
@@ -264,7 +273,7 @@
         (handle-connection-recovery-exception-fn conn t)))
     (handleChannelRecoveryException [^Channel ch ^Throwable t]
       (when handle-channel-recovery-exception-fn
-        (handle-channel-recovery-exception-fn )))
+        (handle-channel-recovery-exception-fn ch t)))
     (handleTopologyRecoveryException [^Connection conn ^Channel ch
                                       ^TopologyRecoveryException t]
       (when handle-topology-recovery-exception-fn
@@ -296,8 +305,8 @@
                      "information"  "See http://clojurerabbitmq.info/"
                      "platform"     (platform-string)
                      "capabilities" (get (AMQConnection/defaultClientProperties) "capabilities")
-                     "copyright"    "Copyright (C) 2011-2014 Michael S. Klishin, Alex Petrov"
-                     "version"      "3.0.x"})
+                     "copyright"    "Copyright (C) 2011-2016 Michael S. Klishin, Alex Petrov"
+                     "version"      "3.7.0"})
 
 (defn- auth-mechanism->sasl-config
   [{:keys [authentication-mechanism]}]

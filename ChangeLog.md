@@ -1,3 +1,70 @@
+## Changes between Langohr 3.7.0 and 4.0.0 (unreleased)
+
+No changes yet.
+
+
+
+## Changes between Langohr 3.6.1 and 3.7.0 (December 9th, 2016)
+
+### RabbitMQ Java Client Upgrade
+
+RabbitMQ Java client dependency has been updated to `3.6.6`.
+
+### clj-http Upgrade
+
+clj-http dependency has been updated to `3.4.1`.
+
+### Cheshire Upgrade
+
+Cheshire dependency has been updated to `5.6.3`.
+
+
+
+## Changes between Langohr 3.5.x and 3.6.1 (June 18th, 2016)
+
+### Client-Provided Connection Name
+
+`:connection-name` is a new connection option supported by Langohr `3.6.0` and RabbitMQ
+server `3.6.2` or later. It can be used to set a client- or application-specific
+connection name that will be displayed in the management UI.
+
+### RabbitMQ Java Client Upgrade
+
+RabbitMQ Java client dependency has been updated to `3.6.2`.
+
+### clj-http Upgrade
+
+clj-http dependency has been updated to `3.1.0`.
+
+### Cheshire Upgrade
+
+Cheshire dependency has been updated to `5.6.1`.
+
+
+## Changes between Langohr 3.5.x and 3.5.1 (Feb 5th, 2016)
+
+### API reference corrections.
+
+GH issue: [#79](https://github.com/michaelklishin/langohr/issues/79).
+
+
+
+## Changes between Langohr 3.4.x and 3.5.0 (Jan 13th, 2016)
+
+### RabbitMQ Java Client Upgrade
+
+RabbitMQ Java client dependency has been updated to `3.6.0`.
+
+
+
+## Changes between Langohr 3.4.1 and 3.4.2
+
+### RabbitMQ Java Client Upgrade
+
+RabbitMQ Java client dependency has been updated to `3.5.7`.
+
+
+
 ## Changes between Langohr 3.3.x and 3.4.0
 
 ### RabbitMQ Java Client Upgrade
